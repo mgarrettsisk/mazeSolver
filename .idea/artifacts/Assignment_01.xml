@@ -1,0 +1,21 @@
+<component name="ArtifactManager">
+  <artifact type="javafx" name="Assignment_01">
+    <output-path>$PROJECT_DIR$/out/artifacts/Assignment_01</output-path>
+    <properties id="javafx-properties">
+      <options>
+        <option name="appClass" value="assignment01.Main" />
+        <option name="description" value="" />
+        <option name="htmlPlaceholderId" value="" />
+        <option name="nativeBundle" value="exe" />
+        <option name="title" value="Assignment 01" />
+        <option name="vendor" value="Marion Garrett Sisk" />
+        <option name="version" value="" />
+      </options>
+    </properties>
+    <root id="root">
+      <element id="archive" name="Assignment_01.jar">
+        <element id="module-output" name="Assignment_01" />
+      </element>
+    </root>
+  </artifact>
+</component>
