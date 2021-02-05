@@ -4,12 +4,20 @@
     <properties id="javafx-properties">
       <options>
         <option name="appClass" value="assignment01.Main" />
-        <option name="description" value="" />
+        <option name="description" value="Maze Solving Application implementing Prim's Algorithm for maze generation and a custom AI agent to navigate and solve the maze. It is written using Java 1.8 and JavaFX 15.01." />
+        <option name="height" value="600" />
         <option name="htmlPlaceholderId" value="" />
-        <option name="nativeBundle" value="exe" />
+        <option name="icons">
+          <JavaFxApplicationIcons>
+            <option name="linuxIcon" value="$PROJECT_DIR$/images/IMG_0027.JPG" />
+            <option name="macIcon" value="$PROJECT_DIR$/images/IMG_0027.JPG" />
+            <option name="windowsIcon" value="$PROJECT_DIR$/images/IMG_0027.JPG" />
+          </JavaFxApplicationIcons>
+        </option>
+        <option name="nativeBundle" value="dmg" />
         <option name="title" value="Assignment 01" />
         <option name="vendor" value="Marion Garrett Sisk" />
-        <option name="version" value="" />
+        <option name="version" value="1.0" />
       </options>
     </properties>
     <root id="root">
