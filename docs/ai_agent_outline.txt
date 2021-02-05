@@ -1,0 +1,5 @@
+Maze Solving AI Agent
+
+This agent is designed to work within a generated maze, finding the solution path from start to finish. The maze environment is a 100x100 tile area, and is generated using Prim's Algorithm. The implementation for maze generation is based upon the implementation found at <ENTER URL>. 
+
+The paths within the maze are one tile across, and tiles can only be transversed along the four cardinal directions (up, down, left, right). The path cost from one tile to the next is only one. The total path cost 
