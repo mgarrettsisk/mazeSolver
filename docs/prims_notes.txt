@@ -38,4 +38,12 @@ Prim's Algorithm
 Choose a random cell on the first column and move to path list
 For all adjacent cells, add to walls list.
 
+
+NOTE: to replicate the way in which the maze is to be visualized, change the way the grid is displayed. Have two layers.
+One major layer that would be 50x50, however, inside each cell would be a subset, maybe 5x5 pixels, or some other such
+arrangement. In any case, the trick for visualization lies on how the canvas grid is drawn and how the cells themselves
+are chosen.
+
+There may be a need to break up each pixel into four configurations, depending upon how the path drawing is done.
+
 		
