@@ -1,0 +1,41 @@
+For pixel resolution:
+
+Total width / Pixel Width = Number of pixels
+
+500 / 10 = 50
+
+0
+10
+20
+30
+40
+
+
+Int x * pixel width = top right corner of rectangle
+
+0 * 10 = 
+
+
+Prim's Randomized
+
+Three data structures:
+
+(Class) Graph
+	Cell <class>
+		xCoord <int>
+		yCoord <int>
+		Cell Above <Cell>		NOTE: if a cell is at an edge of the graph, the value will be 'null'
+		Cell Below <Cell>
+		Cell Left <Cell>
+		Cell Right <Cell>
+		Visit Count <int>
+	Vertices <List<Cell>>
+		
+	
+
+Prim's Algorithm
+
+Choose a random cell on the first column and move to path list
+For all adjacent cells, add to walls list.
+
+		

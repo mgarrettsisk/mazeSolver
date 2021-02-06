@@ -6,13 +6,17 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
+
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class mainController implements Initializable {
 
     // GUI Objects
+    public BorderPane borderPane;
     public Canvas centerCanvas;
     public TextField notificationText;
     public Button generateMazeButton;
@@ -38,14 +42,31 @@ public class mainController implements Initializable {
     // Public Event Handling Methods
     public void generateMaze() {
         // method used to generate the maze object and display it on the mainCanvas object
+        canvasGraph graph = new canvasGraph(50,50);
     }
 
     public void clearMaze() {
         // method used to reset the application to its initial state
+        canvasGc.clearRect(0,0,centerCanvas.getWidth(),centerCanvas.getHeight());
+        drawGrid(canvasGc);
     }
 
     public void solveMaze() {
         // this method invokes the AI agent that will solve the maze
+        for (int xIndex = 1; xIndex <= 50; xIndex++) {
+            for (int yIndex = 1; yIndex <=50; yIndex++) {
+                if (xIndex%2 == 0 && yIndex%2 != 0) {
+                    drawPixel(canvasGc,xIndex,yIndex,"green");
+                } else if (xIndex%2 != 0 && yIndex%2 == 0) {
+                    drawPixel(canvasGc,xIndex,yIndex,"blue");
+                } else if (xIndex%2 != 0 && yIndex%2 != 0) {
+                    drawPixel(canvasGc,xIndex,yIndex,"red");
+                }
+
+            }
+
+        }
+
     }
 
     public void showAbout() {
@@ -54,6 +75,8 @@ public class mainController implements Initializable {
 
     public void closeProgram() {
         // this method ensure the program closes appropriately
+        Stage activeStage = (Stage) this.borderPane.getScene().getWindow();
+        activeStage.close();
     }
 
     // Private Methods
@@ -90,11 +113,19 @@ public class mainController implements Initializable {
         }
     }
 
-    private void drawPixel(GraphicsContext contextInput, int x, int y) {
+    private void drawPixel(GraphicsContext contextInput, int x, int y, String color) {
         // creates a pixel that is then drawn onto the particular canvas. Pixel size and color can be defined below.
 
         // Set the color of the pixel
-        contextInput.setFill(Color.BLUE);
+        if (color.equalsIgnoreCase("blue")){
+            contextInput.setFill(Color.BLUE);
+        } else if (color.equalsIgnoreCase("red")) {
+            contextInput.setFill(Color.RED);
+        } else if (color.equalsIgnoreCase("green")) {
+            contextInput.setFill(Color.GREEN);
+        } else {
+            contextInput.setFill(Color.BLACK);
+        }
 
         // Define the Size of the pixel
         int pixelHeight = 10;
@@ -105,7 +136,17 @@ public class mainController implements Initializable {
         double horizontalSize = contextInput.getCanvas().getWidth();
 
         // Determine location of top right hand corner of pixel from input (X,Y)
+        int canvasXcoord = (x-1) * pixelWidth;
+        int canvasYcoord = (y-1) * pixelHeight;
 
+        // Display error if computed coordinate goes beyond the canvas dimensions
+        if ((canvasXcoord > horizontalSize) || (canvasYcoord > verticalSize)) {
+            System.out.println("The computed coordinate is beyond the canvas.");
+        }
+
+        // Write the actual "pixel" to the canvas
+        contextInput.fillRect(canvasXcoord,canvasYcoord,pixelWidth,pixelHeight);
     }
 
 }
+
