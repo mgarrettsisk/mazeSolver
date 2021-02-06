@@ -62,15 +62,14 @@ public class mainController implements Initializable {
                 } else if (xIndex%2 != 0 && yIndex%2 != 0) {
                     drawPixel(canvasGc,xIndex,yIndex,"red");
                 }
-
             }
-
         }
-
     }
 
-    public void showAbout() {
+    public void showAbout() throws Exception {
         // this method calls the about window and displays the result
+        aboutController about = new aboutController();
+        about.showWindow();
     }
 
     public void closeProgram() {
