@@ -42,7 +42,7 @@ public class mainController implements Initializable {
     // Public Event Handling Methods
     public void generateMaze() {
         // method used to generate the maze object and display it on the mainCanvas object
-        canvasGraph graph = new canvasGraph(50,50);
+
     }
 
     public void clearMaze() {
@@ -104,12 +104,14 @@ public class mainController implements Initializable {
                 contextInput.strokeLine(0,vIndex,horizontalSize,vIndex);
             }
         }
+
         // Draw the vertical lines
         for (int hIndex = 0; hIndex <= horizontalSize; hIndex++) {
             if (hIndex%pixelHeight == 0) {
                 contextInput.strokeLine(hIndex,0,hIndex,verticalSize);
             }
         }
+        
     }
 
     private void drawPixel(GraphicsContext contextInput, int x, int y, String color) {
