@@ -29,7 +29,7 @@ public class mainController implements Initializable {
     public GraphicsContext canvasGc;
 
     // private attributes
-
+    private int pixelSize;
 
 
     @Override
@@ -38,7 +38,7 @@ public class mainController implements Initializable {
         canvasGc = centerCanvas.getGraphicsContext2D();
 
         // draw the grid upon startup
-        drawGrid(canvasGc);
+        setPixelSize10();
         System.out.println(canvasGc.getCanvas().getHeight());
         System.out.println(canvasGc.getCanvas().getWidth());
     }
@@ -57,7 +57,8 @@ public class mainController implements Initializable {
 
     public void solveMaze() {
         // this method invokes the AI agent that will solve the maze
-        gridGraph graph = new gridGraph((int)canvasGc.getCanvas().getWidth()/10, (int)canvasGc.getCanvas().getHeight()/10);
+        gridGraph graph = new gridGraph((int)canvasGc.getCanvas().getWidth()/this.pixelSize,
+                (int)canvasGc.getCanvas().getHeight()/this.pixelSize);
         updateNotificationArea("The gridGraph object has been successfully created.");
         gridGraph.cell workingCell = graph.getCell(42);
 
@@ -88,6 +89,27 @@ public class mainController implements Initializable {
         activeStage.close();
     }
 
+    public void setPixelSize5() {
+        // used as part of the radio menu selector to set the appropriate pixel size
+        this.pixelSize = 5;
+        drawGrid(canvasGc);
+    }
+    public void setPixelSize10() {
+        // used as part of the radio menu selector to set the appropriate pixel size
+        this.pixelSize = 10;
+        drawGrid(canvasGc);
+    }
+    public void setPixelSize20() {
+        // used as part of the radio menu selector to set the appropriate pixel size
+        this.pixelSize = 20;
+        drawGrid(canvasGc);
+    }
+
+    public int getPixelSize() {
+        // returns the set pixel size
+        return this.pixelSize;
+    }
+
     // Private Methods
     private void updateNotificationArea(String notification) {
         // this method takes a string as input and displays it in the notification text field
@@ -98,8 +120,8 @@ public class mainController implements Initializable {
         // draws a grid with cell size of 10x10 pixels, size of pixel can be changed with the parameters given below
 
         // Define the "pixel" size (in actual pixels)
-        int pixelHeight = 10;
-        int pixelWidth = 10;
+        int pixelHeight = this.pixelSize;
+        int pixelWidth = this.pixelSize;
 
         // Determine the maximum sizes for the canvas area
         double verticalSize = contextInput.getCanvas().getHeight();
@@ -139,8 +161,8 @@ public class mainController implements Initializable {
         }
 
         // Define the Size of the pixel
-        int pixelHeight = 10;
-        int pixelWidth = 10;
+        int pixelHeight = this.pixelSize;
+        int pixelWidth = this.pixelSize;
 
         // Define the maximum dimensions of the intended canvas
         double verticalSize = contextInput.getCanvas().getHeight();
