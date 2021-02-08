@@ -101,8 +101,9 @@ public class gridGraph {
                     walls.add(new wall(workingCell, cells.get(listIndex+1))); // right
                     walls.add(new wall(workingCell, cells.get(listIndex+xSize))); // bottom
                 }
-
             }
+            // Lastly, the adjacency lists must be created for each cell, this is done by populating the neighbors list
+            // in each cell object
         }
 
     // Internal Classes
@@ -112,6 +113,11 @@ public class gridGraph {
         // Attributes
         private int[] position;
         private int visitCount = 0;
+        private wall topWall = null;
+        private wall leftWall = null;
+        private wall rightWall = null;
+        private wall bottomWall = null;
+        private ArrayList<cell> neighbors = new ArrayList<>();
 
         // Methods
 
@@ -142,6 +148,46 @@ public class gridGraph {
             return this.position[1];
         }
 
+        protected void setTopWall(wall inputWall) {
+            // method to place the top wall into its appropriate place
+            this.topWall = inputWall;
+        }
+
+        protected wall getTopWall() {
+            // returns the top wall object
+            return this.topWall;
+        }
+
+        protected void setLeftWall(wall inputWall) {
+            // method to place the left wall into its appropriate place
+            this.leftWall = inputWall;
+        }
+
+        protected wall getLeftWall() {
+            // returns the left wall object
+            return this.leftWall;
+        }
+
+        protected void setRightWall(wall inputWall) {
+            // method to place the right wall into its appropriate place
+            this.rightWall = inputWall;
+        }
+
+        protected wall getRightWall() {
+            // returns the right wall object
+            return this.rightWall;
+        }
+
+        protected void setBottomWall(wall inputWall) {
+            // method to place the bottom wall into its appropriate place
+            this.bottomWall = inputWall;
+        }
+
+        protected wall getBottomWall() {
+            // returns the bottom wall object
+            return this.bottomWall;
+        }
+
         protected void visit() {
             // increases the visit count by 1 every time the method is called
             this.visitCount++;
@@ -150,6 +196,27 @@ public class gridGraph {
         protected int getVisitCount() {
             // returns the visit count when called
             return this.visitCount;
+        }
+
+        protected boolean isNeighbor(cell c) {
+            // this method takes a cell as input and determines whether it is a neighboring cell or not
+            // This is achieved by comparing the wall objects between the cells. Essentially, if the wall object is the
+            // same on the cell "c" as it is on the mating side of the current cell, then the cells are neighbors. If
+            // any walls contain "null" then there is no neighbor on that side, and the method will not check that side.
+            //
+            // The method returns a boolean "true" if the cells are neighbors, and a "false" if they are not.
+
+            return true;
+        }
+
+        protected void addNeighbor(cell c) {
+            // this method takes a cell as input and adds the cell to the neighbors ArrayList object
+            this.neighbors.add(c);
+        }
+
+        protected ArrayList<cell> getNeighbors() {
+            // returns the array list of neighboring cells
+            return this.neighbors;
         }
 
         @Override
