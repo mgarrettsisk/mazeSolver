@@ -71,7 +71,7 @@ public class mainController implements Initializable {
         workingCell = graph.getCell(0);
         drawPixel(canvasGc,workingCell.getX(),workingCell.getY(),"red");
 
-        workingCell = graph.getCell(2499);
+        workingCell = graph.getCell(graph.getCellsSize()-1);
         drawPixel(canvasGc,workingCell.getX(),workingCell.getY(),"green");
 
         drawPixel(canvasGc,xPos,yPos,"blue");
@@ -92,16 +92,19 @@ public class mainController implements Initializable {
     public void setPixelSize5() {
         // used as part of the radio menu selector to set the appropriate pixel size
         this.pixelSize = 5;
+        clearMaze();
         drawGrid(canvasGc);
     }
     public void setPixelSize10() {
         // used as part of the radio menu selector to set the appropriate pixel size
         this.pixelSize = 10;
+        clearMaze();
         drawGrid(canvasGc);
     }
     public void setPixelSize20() {
         // used as part of the radio menu selector to set the appropriate pixel size
         this.pixelSize = 20;
+        clearMaze();
         drawGrid(canvasGc);
     }
 

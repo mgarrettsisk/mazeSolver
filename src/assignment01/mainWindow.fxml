@@ -50,13 +50,13 @@
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <Menu mnemonicParsing="false" text="Set Pixel Size">
                     <items>
-                        <RadioMenuItem fx:id="pixelSize5" mnemonicParsing="false" onMenuValidation="#setPixelSize5" text="5">
+                        <RadioMenuItem fx:id="pixelSize5" mnemonicParsing="false" onAction="#setPixelSize5" text="5">
                            <toggleGroup>
                               <ToggleGroup fx:id="pixelSizeGroup" />
                            </toggleGroup>
                         </RadioMenuItem>
-                        <RadioMenuItem fx:id="pixelSize10" mnemonicParsing="false" onMenuValidation="#setPixelSize10" selected="true" text="10" toggleGroup="$pixelSizeGroup" />
-                        <RadioMenuItem fx:id="pixelSize20" mnemonicParsing="false" onMenuValidation="#setPixelSize20" text="20" toggleGroup="$pixelSizeGroup" />
+                        <RadioMenuItem fx:id="pixelSize10" mnemonicParsing="false" onAction="#setPixelSize10" selected="true" text="10" toggleGroup="$pixelSizeGroup" />
+                        <RadioMenuItem fx:id="pixelSize20" mnemonicParsing="false" onAction="#setPixelSize20" text="20" toggleGroup="$pixelSizeGroup" />
                     </items>
                   </Menu>
               </items>
