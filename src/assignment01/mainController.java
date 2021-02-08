@@ -28,6 +28,10 @@ public class mainController implements Initializable {
     public MenuItem aboutMenuButton;
     public GraphicsContext canvasGc;
 
+    // private attributes
+
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // get the Graphics Context of the center canvas
@@ -53,17 +57,23 @@ public class mainController implements Initializable {
 
     public void solveMaze() {
         // this method invokes the AI agent that will solve the maze
-        for (int xIndex = 1; xIndex <= 50; xIndex++) {
-            for (int yIndex = 1; yIndex <=50; yIndex++) {
-                if (xIndex%2 == 0 && yIndex%2 != 0) {
-                    drawPixel(canvasGc,xIndex,yIndex,"green");
-                } else if (xIndex%2 != 0 && yIndex%2 == 0) {
-                    drawPixel(canvasGc,xIndex,yIndex,"blue");
-                } else if (xIndex%2 != 0 && yIndex%2 != 0) {
-                    drawPixel(canvasGc,xIndex,yIndex,"red");
-                }
-            }
-        }
+        gridGraph graph = new gridGraph((int)canvasGc.getCanvas().getWidth()/10, (int)canvasGc.getCanvas().getHeight()/10);
+        updateNotificationArea("The gridGraph object has been successfully created.");
+        gridGraph.cell workingCell = graph.getCell(42);
+
+        int xPos = workingCell.getX();
+        System.out.println(xPos);
+        int yPos = workingCell.getY();
+        System.out.println(yPos);
+        updateNotificationArea("Cells: " + graph.getCellsSize() + "; Walls: " + graph.getWallsSize());
+
+        workingCell = graph.getCell(0);
+        drawPixel(canvasGc,workingCell.getX(),workingCell.getY(),"red");
+
+        workingCell = graph.getCell(2499);
+        drawPixel(canvasGc,workingCell.getX(),workingCell.getY(),"green");
+
+        drawPixel(canvasGc,xPos,yPos,"blue");
     }
 
     public void showAbout() throws Exception {
