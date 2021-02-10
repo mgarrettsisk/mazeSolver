@@ -26,6 +26,11 @@ public class gridGraph {
         return cells.size();
     }
 
+    public wall getWall(int index) {
+        // returns a wall object given a particular index on the walls ArrayList
+        return walls.get(index);
+    }
+
     public int getWallsSize() {
         // returns the cardinality of the walls set
         return walls.size();

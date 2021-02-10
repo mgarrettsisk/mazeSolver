@@ -52,7 +52,7 @@ public class mainController implements Initializable {
     public void clearMaze() {
         // method used to reset the application to its initial state
         canvasGc.clearRect(0,0,centerCanvas.getWidth(),centerCanvas.getHeight());
-        drawGrid(canvasGc);
+        //drawGrid(canvasGc);
     }
 
     public void solveMaze() {
@@ -60,6 +60,8 @@ public class mainController implements Initializable {
         gridGraph graph = new gridGraph((int)canvasGc.getCanvas().getWidth()/this.pixelSize,
                 (int)canvasGc.getCanvas().getHeight()/this.pixelSize);
         updateNotificationArea("The gridGraph object has been successfully created.");
+
+        // Below this is testing/toying expressions and are not a part of the final program
         gridGraph.cell workingCell = graph.getCell(42);
 
         int xPos = workingCell.getX();
@@ -67,7 +69,7 @@ public class mainController implements Initializable {
         int yPos = workingCell.getY();
         System.out.println(yPos);
         updateNotificationArea("Cells: " + graph.getCellsSize() + "; Walls: " + graph.getWallsSize());
-
+/*
         workingCell = graph.getCell(0);
         drawPixel(canvasGc,workingCell.getX(),workingCell.getY(),"red");
 
@@ -75,6 +77,17 @@ public class mainController implements Initializable {
         drawPixel(canvasGc,workingCell.getX(),workingCell.getY(),"green");
 
         drawPixel(canvasGc,xPos,yPos,"blue");
+
+ */
+        graph.walls.remove(601);
+        graph.walls.remove(602);
+
+        for (int index = 0; index < graph.getWallsSize(); index++) {
+            gridGraph.wall workingWall = graph.getWall(index);
+            drawWall(canvasGc,workingWall, Color.BLACK);
+        }
+        System.out.println("Total drawn wall count: " + wallCount);
+        wallCount = 0;
     }
 
     public void showAbout() throws Exception {
@@ -93,19 +106,19 @@ public class mainController implements Initializable {
         // used as part of the radio menu selector to set the appropriate pixel size
         this.pixelSize = 5;
         clearMaze();
-        drawGrid(canvasGc);
+        //drawGrid(canvasGc);
     }
     public void setPixelSize10() {
         // used as part of the radio menu selector to set the appropriate pixel size
         this.pixelSize = 10;
         clearMaze();
-        drawGrid(canvasGc);
+        //drawGrid(canvasGc);
     }
     public void setPixelSize20() {
         // used as part of the radio menu selector to set the appropriate pixel size
         this.pixelSize = 20;
         clearMaze();
-        drawGrid(canvasGc);
+        //drawGrid(canvasGc);
     }
 
     public int getPixelSize() {
@@ -147,6 +160,96 @@ public class mainController implements Initializable {
             }
         }
         
+    }
+
+    private void drawCell(GraphicsContext context, gridGraph.cell inputCell, Color colorInput) {
+        // this method takes a cell as input and draws it on the canvas at the appropriate coordinates
+
+        // Set the fill color
+        context.setFill(colorInput);
+
+        // define the size of the pixel
+        int pixelHeight = this.pixelSize;
+        int pixelWidth = this.pixelSize;
+
+        // get coordinates from cell
+        int xPos = inputCell.getX();
+        int yPos = inputCell.getY();
+
+        // transform cell coordinates to canvas coordinates
+        int canvasXpos = (xPos - 1) * pixelWidth;
+        int canvasYpos = (yPos - 1) * pixelHeight;
+
+        // draw actual pixel to the canvas
+        context.fillRect(canvasXpos, canvasYpos,pixelWidth, pixelHeight);
+    }
+
+    int wallCount = 0;
+
+    private void drawWall(GraphicsContext context, gridGraph.wall inputWall, Color colorInput) {
+        // this method takes a wall as input and draws it at the appropriate location on the canvas
+
+        // set the color of the wall and the stroke size
+        context.setStroke(colorInput);
+        context.setLineWidth(1.0);
+
+        // define the size of the pixel boundaries
+        int pixelWidth = this.pixelSize;
+        int pixelHeight = this.pixelSize;
+
+
+
+        int xPos1 = 0;
+        int xPos2 = 0;
+        int yPos1 = 0;
+        int yPos2 = 0;
+
+        // get the cell end points and load X and Y coordinates
+        if (inputWall.getCellOne() != null) {
+            xPos1 = inputWall.getCellOne().getX();
+            System.out.println(xPos1);
+            yPos1 = inputWall.getCellOne().getY();
+            System.out.println(yPos1);
+        }
+        if (inputWall.getCellTwo() != null) {
+            xPos2 = inputWall.getCellTwo().getX();
+            System.out.println(xPos2);
+            yPos2 = inputWall.getCellTwo().getY();
+            System.out.println(yPos2);
+        }
+
+        if ((xPos1 < xPos2) && !(xPos1 == context.getCanvas().getWidth()/pixelWidth)) {
+            // for right walls
+            int rightXpos = ((xPos1 - 1) * pixelWidth) + pixelWidth;
+            int rightYpos = (yPos1 -1) * pixelHeight;
+            int rightYpos2 = rightYpos + pixelHeight;
+            context.strokeLine(rightXpos, rightYpos, rightXpos, rightYpos2);
+            wallCount++;
+
+            // for bottom walls
+            if (yPos1 != context.getCanvas().getHeight()/pixelHeight) {
+                int bottomXpos = (xPos1 - 1) * pixelWidth;
+                int bottomYpos = (yPos1 - 1) * pixelHeight + pixelHeight;
+                int bottomXpos2 = bottomXpos + pixelWidth;
+                context.strokeLine(bottomXpos, bottomYpos, bottomXpos2, bottomYpos);
+                wallCount++;
+            }
+        }
+
+        if (xPos1 == context.getCanvas().getWidth()/pixelWidth &&
+                !(yPos1 == context.getCanvas().getHeight()/pixelHeight || yPos1 == 0)) {
+            int bottomXpos = (xPos1 -1 ) * pixelWidth;
+            int bottomYpos = (yPos1 - 1) * pixelHeight + pixelHeight;
+            int bottomXpos2 = bottomXpos + pixelWidth;
+            context.strokeLine(bottomXpos, bottomYpos, bottomXpos2, bottomYpos);
+            wallCount++;
+        }
+
+        context.setStroke(Color.RED);
+        context.strokeLine(0,0,0,100);
+        context.strokeLine(context.getCanvas().getWidth(),0,context.getCanvas().getWidth(),100);
+        context.strokeLine(0, context.getCanvas().getHeight(), 100, context.getCanvas().getHeight());
+
     }
 
     private void drawPixel(GraphicsContext contextInput, int x, int y, String color) {
