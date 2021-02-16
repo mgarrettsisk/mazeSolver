@@ -59,76 +59,73 @@ public class gridGraph {
             lists for each cell are created. This is done through the cell.addNeighbors(cell c) method.
          */
             for (int listIndex = 0; listIndex < cells.size(); listIndex++) {
+                // get the current cell from list
                 cell workingCell = cells.get(listIndex);
+
+                // get working cell's position on the grid
                 int cellX = workingCell.getX();
                 int cellY = workingCell.getY();
-                // Determine special cases and work as appropriate.
-                if (cellX == 1 && cellY == 1) {
-                    // Create four walls on the top left cell
-                    walls.add(new wall(workingCell,null)); // left
-                    walls.add(new wall(workingCell, null)); // top
-                    walls.add(new wall(workingCell, cells.get(listIndex+1))); // right
-                    workingCell.addNeighbor(cells.get(listIndex+1)); // add right neighbor
-                    walls.add(new wall(workingCell, cells.get(listIndex+xSize))); // bottom
-                    workingCell.addNeighbor(cells.get(listIndex+xSize)); // add bottom neighbor
-                } else if (cellX != 1 && cellX != xSize && cellY == 1) {
-                    // Create three walls for all cells on top row
-                    workingCell.addNeighbor(cells.get(listIndex-1)); // add left neighbor
-                    walls.add(new wall(workingCell, null)); // top
-                    walls.add(new wall(workingCell, cells.get(listIndex+1))); // right
-                    workingCell.addNeighbor(cells.get(listIndex+1)); // add right neighbor
-                    walls.add(new wall(workingCell, cells.get(listIndex+xSize))); // bottom
-                    workingCell.addNeighbor(cells.get(listIndex+xSize)); // add bottom neighbor
-                } else if (cellX == xSize && cellY == 1) {
-                    // Create three walls for top right cell
-                    workingCell.addNeighbor(cells.get(listIndex-1)); // add left neighbor
-                    walls.add(new wall(workingCell, null)); // top
-                    walls.add(new wall(workingCell,null)); // right
-                    walls.add(new wall(workingCell, cells.get(listIndex+xSize))); // bottom
-                    workingCell.addNeighbor(cells.get(listIndex+xSize)); // add bottom neighbor
-                } else if (cellX == 1 && cellY !=ySize) {
-                    // add three walls to each cell on the left column
-                    walls.add(new wall(workingCell, null));// left
-                    workingCell.addNeighbor(cells.get(listIndex-xSize)); // add top neighbor
-                    walls.add(new wall(workingCell, cells.get(listIndex+1)));// right
-                    workingCell.addNeighbor(cells.get(listIndex+1)); // add right neighbor
-                    walls.add(new wall(workingCell, cells.get(listIndex+xSize)));// bottom
-                    workingCell.addNeighbor(cells.get(listIndex+xSize)); // add bottom neighbor
-                } else if (cellX == xSize && cellY != 1 && cellY != ySize) {
-                    // add walls to all cells on the right column
-                    workingCell.addNeighbor(cells.get(listIndex-1)); // left neighbor
-                    workingCell.addNeighbor(cells.get(listIndex-xSize)); // top neighbor
-                    walls.add(new wall(workingCell, null));// right
-                    walls.add(new wall(workingCell, cells.get(listIndex+1)));// bottom
-                    workingCell.addNeighbor(cells.get(listIndex+xSize)); // bottom neighbor
-                } else if (cellX == 1 && cellY == ySize) {
-                    // add walls to bottom left corner
-                    walls.add(new wall(workingCell, null)); // left
-                    workingCell.addNeighbor(cells.get(listIndex-xSize)); // top neighbor
-                    walls.add(new wall(workingCell, cells.get(listIndex+1))); // right
-                    workingCell.addNeighbor(cells.get(listIndex+1)); // right neighbor
-                    walls.add(new wall(workingCell, null));// bottom
-                } else if (cellX !=1 && cellX != xSize && cellY == ySize) {
-                    // add walls to bottom row cells
-                    workingCell.addNeighbor(cells.get(listIndex-1)); // left neighbor
-                    workingCell.addNeighbor(cells.get(listIndex-xSize)); // top neighbor
-                    walls.add(new wall(workingCell, cells.get(listIndex+1))); // right
-                    workingCell.addNeighbor(cells.get(listIndex+1)); // right neighbor
-                    walls.add(new wall(workingCell, null));// bottom
-                } else if (cellX == xSize && cellY == ySize) {
-                    // create two walls on bottom right cell
-                    workingCell.addNeighbor(cells.get(listIndex-1)); // left neighbor
-                    workingCell.addNeighbor(cells.get(listIndex-xSize)); // top neighbor
-                    walls.add(new wall(workingCell, null));
-                    walls.add(new wall(workingCell, null));
+
+                // add walls and neighbors to working cell
+                // add top wall and neighbor
+                if (cellY == 1) {
+                    wall workingTop = new wall(workingCell, null);
+                    walls.add(workingTop);
+                    workingCell.setTopNeighbor(null);
                 } else {
-                    // fill all the interior cells with a right and a bottom wall
-                    workingCell.addNeighbor(cells.get(listIndex-1)); // left neighbor
-                    workingCell.addNeighbor(cells.get(listIndex-xSize)); // top neighbor
-                    walls.add(new wall(workingCell, cells.get(listIndex+1))); // right
-                    workingCell.addNeighbor(cells.get(listIndex+1)); // right neighbor
-                    walls.add(new wall(workingCell, cells.get(listIndex+xSize))); // bottom
-                    workingCell.addNeighbor(cells.get(listIndex+xSize)); // bottom neighbor
+                    wall workingTop = new wall(workingCell, cells.get(listIndex - xSize));
+                    if (walls.contains(workingTop)) {
+                        workingCell.setTopWall(walls.get(walls.indexOf(workingTop)));
+                    } else {
+                        workingCell.setTopWall(workingTop);
+                        walls.add(workingTop);
+                    }
+                    workingCell.setTopNeighbor(cells.get(listIndex - xSize));
+                }
+                // add right wall and neighbor
+                if (cellX == xSize) {
+                    wall workingRight = new wall(workingCell, null);
+                    walls.add(workingRight);
+                    workingCell.setRightNeighbor(null);
+                } else {
+                    wall workingRight = new wall(workingCell, cells.get(listIndex + 1));
+                    if (walls.contains(workingRight)) {
+                        workingCell.setRightWall(walls.get(walls.indexOf(workingRight)));
+                    } else {
+                        workingCell.setRightWall(workingRight);
+                        walls.add(workingRight);
+                    }
+                    workingCell.setRightNeighbor(cells.get(listIndex + 1));
+                }
+                // add bottom wall and neighbor
+                if (cellY == ySize) {
+                    wall workingBottom = new wall(workingCell, null);
+                    walls.add(workingBottom);
+                    workingCell.setBottomNeighbor(null);
+                } else {
+                    wall workingBottom = new wall(workingCell, cells.get(listIndex + xSize));
+                    if (walls.contains(workingBottom)) {
+                        workingCell.setBottomWall(walls.get(walls.indexOf(workingBottom)));
+                    } else {
+                        workingCell.setBottomWall(workingBottom);
+                        walls.add(workingBottom);
+                    }
+                    workingCell.setBottomNeighbor(cells.get(listIndex + xSize));
+                }
+                // add left wall and neighbor
+                if (cellX ==1) {
+                    wall workingLeft = new wall(workingCell, null);
+                    walls.add(workingLeft);
+                    workingCell.setLeftNeighbor(null);
+                } else {
+                    wall workingLeft = new wall(workingCell, cells.get(listIndex - 1));
+                    if (walls.contains(workingLeft)) {
+                        workingCell.setLeftWall(walls.get(walls.indexOf(workingLeft)));
+                    } else {
+                        workingCell.setLeftWall(workingLeft);
+                        walls.add(workingLeft);
+                    }
+                    workingCell.setLeftNeighbor(cells.get(listIndex - 1));
                 }
             }
         }
@@ -144,7 +141,7 @@ public class gridGraph {
         private wall leftWall = null;
         private wall rightWall = null;
         private wall bottomWall = null;
-        private final ArrayList<cell> neighbors = new ArrayList<>();
+        private final cell[] neighbors = new cell[4];
 
         // Methods
 
@@ -201,7 +198,7 @@ public class gridGraph {
         }
 
         protected wall getRightWall() {
-            // returns the right wall object
+            // returns the right wall------- object
             return this.rightWall;
         }
 
@@ -236,22 +233,43 @@ public class gridGraph {
             return true;
         }
 
-        protected void addNeighbor(cell c) {
-            // this method takes a cell as input and adds the cell to the neighbors ArrayList object
-            this.neighbors.add(c);
+        protected void setTopNeighbor(cell c) {
+            // this method takes a cell as input and adds as the top neighbor
+            this.neighbors[0] = c;
         }
 
-        protected ArrayList<cell> getNeighbors() {
+        protected void setRightNeighbor(cell c) {
+            // this method takes a cell as input and adds as the right neighbor
+            this.neighbors[1] = c;
+        }
+
+        protected void setBottomNeighbor(cell c) {
+            // this method takes a cell as input and adds as the bottom neighbor
+            this.neighbors[2] = c;
+        }
+
+        protected void setLeftNeighbor(cell c) {
+            // this method takes a cell as input and adds as the left neighbor
+            this.neighbors[3] = c;
+        }
+
+        protected cell[] getNeighbors() {
             // returns the array list of neighboring cells
+            // The array is of format:
+            //  0 = top
+            //  1 = right
+            //  2 = bottom
+            //  3 = left
             return this.neighbors;
         }
 
         @Override
         public boolean equals(Object obj) {
-            if (this.getX() == ((cell)obj).getX() && this.getY() == ((cell)obj).getY()) {
-                return true;
-            } else {
+            if (!(obj instanceof cell)) {
                 return false;
+            } else {
+                cell compareCell = (cell) obj;
+                return (this.getX() == compareCell.getX() && this.getY() == compareCell.getY());
             }
         }
     }
@@ -294,12 +312,18 @@ public class gridGraph {
 
         @Override
         public boolean equals(Object obj) {
-            if ((this.getCellOne().equals(((wall)obj).getCellOne()) || this.getCellOne().equals(((wall)obj).getCellTwo())) &&
+            if (!(obj instanceof wall)) {
+                return false;
+            } else if (this.getCellOne() == null || this.getCellTwo() == null) {
+                return false;
+            } else if ((this.getCellOne().equals(((wall)obj).getCellOne()) || this.getCellOne().equals(((wall)obj).getCellTwo())) &&
                     (this.getCellTwo().equals(((wall)obj).getCellOne()) || this.getCellTwo().equals(((wall)obj).getCellTwo()))) {
                 return true;
             } else {
                 return false;
             }
         }
+
+
     }
 }

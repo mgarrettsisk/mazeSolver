@@ -1,0 +1,86 @@
+
+
+
+Create Each Cell in Grid
+
+Adding Walls and Neighbors to each cell:
+
+FOR EACH cell in Cell Array: 
+
+	ADD top wall and neighbor
+		IF the y position of the cell is 1 (e.g. on the top row) THEN
+			CREATE top wall with cell and null entry
+			SET top neighbor to NULL
+		ELSE
+			CREATE top wall with working cell and cell above
+			IF wall array contains top wall THEN
+				GET index of top wall in wall array
+				GET wall from wall array
+				SET top wall with wall from wall array
+			ELSE
+				SET top wall from newly CREATEd wall
+			END IF
+			SET top neighbor to appropriate cell
+		END IF
+	END ADD
+
+	ADD right wall and neighbor
+		IF the x position of the cell is equal to the max width THEN
+			< SEE ABOVE FOR THE TOP WALL >
+	END ADD
+
+	ADD bottom wall and neighbor
+		IF the y position of the cell is equal to the max height THEN
+			< SEE ABOVE FOR THE TOP WALL >
+	END ADD
+
+	ADD left wall and neighbor
+		IF the x position of the cel is 1 THEN
+			< SEE ABOVE FOR THE TOP WALL >
+
+
+Drawing all walls and avoiding duplicates:
+
+CREATE copy of WALL ARRAY
+FOR EACH cell in cell array
+	IF wall array CONTAINS top wall THEN
+		DRAW top wall				**** SEE BELOW FOR "DRAW" STRATEGY
+		REMOVE top wall from wall array
+	ELSE
+		DO NOTHING
+	END IF
+
+	REPEAT THE ABOVE IF STATEMENT FOR EACH WALL
+END FOR
+
+Drawing a Wall:
+
+0,0 --------------------------- pixelWidth,0
+|					|
+|					|
+|					|
+|					|
+0,pixelHeight ----------------- pixelWidth,pixelHeight
+
+
+The absolute canvas dimensions can be found by taking the x and y positions of the cell, subtracting 1, and multiplying by the pixelHeight and pixelWidth
+
+Determine the absolute coordinates of the top left part of each cell
+	canvasX = (cell.getX-1)*pixelWidth
+	canvasY = (cell.getY-1)*pixelHeight
+
+Top -> (canvasX,canvasY) to (canvasX+pixelWidth,canvasY)
+
+Right -> (canvasX+pixelWidth,canvasY) to (canvasX+pixelWidth, canvasY+pixelHeight)
+
+Bottom -> (canvasX+pixelWidth, canvasY+pixelHeight) to (canvasX, canvasY+pixelHeight)
+
+Right -> (canvasX, canvasY+pixelHeight) to (canvasX, canvasY)
+
+
+
+
+Wall Equivalency:
+
+Walls are the same if they contain the same pair of cell ends
+

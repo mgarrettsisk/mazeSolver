@@ -60,34 +60,8 @@ public class mainController implements Initializable {
         gridGraph graph = new gridGraph((int)canvasGc.getCanvas().getWidth()/this.pixelSize,
                 (int)canvasGc.getCanvas().getHeight()/this.pixelSize);
         updateNotificationArea("The gridGraph object has been successfully created.");
-
-        // Below this is testing/toying expressions and are not a part of the final program
-        gridGraph.cell workingCell = graph.getCell(42);
-
-        int xPos = workingCell.getX();
-        System.out.println(xPos);
-        int yPos = workingCell.getY();
-        System.out.println(yPos);
-        updateNotificationArea("Cells: " + graph.getCellsSize() + "; Walls: " + graph.getWallsSize());
-/*
-        workingCell = graph.getCell(0);
-        drawPixel(canvasGc,workingCell.getX(),workingCell.getY(),"red");
-
-        workingCell = graph.getCell(graph.getCellsSize()-1);
-        drawPixel(canvasGc,workingCell.getX(),workingCell.getY(),"green");
-
-        drawPixel(canvasGc,xPos,yPos,"blue");
-
- */
-        graph.walls.remove(601);
-        graph.walls.remove(602);
-
-        for (int index = 0; index < graph.getWallsSize(); index++) {
-            gridGraph.wall workingWall = graph.getWall(index);
-            drawWall(canvasGc,workingWall, Color.BLACK);
-        }
-        System.out.println("Total drawn wall count: " + wallCount);
-        wallCount = 0;
+        System.out.println("Number of Cells: " + graph.getCellsSize());
+        System.out.println("Number of Walls: " + graph.getWallsSize());
     }
 
     public void showAbout() throws Exception {
