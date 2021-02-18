@@ -71,6 +71,7 @@ public class gridGraph {
                 if (cellY == 1) {
                     wall workingTop = new wall(workingCell, null);
                     walls.add(workingTop);
+                    workingCell.setTopWall(workingTop);
                     workingCell.setTopNeighbor(null);
                 } else {
                     wall workingTop = new wall(workingCell, cells.get(listIndex - xSize));
@@ -86,6 +87,7 @@ public class gridGraph {
                 if (cellX == xSize) {
                     wall workingRight = new wall(workingCell, null);
                     walls.add(workingRight);
+                    workingCell.setRightWall(workingRight);
                     workingCell.setRightNeighbor(null);
                 } else {
                     wall workingRight = new wall(workingCell, cells.get(listIndex + 1));
@@ -101,6 +103,7 @@ public class gridGraph {
                 if (cellY == ySize) {
                     wall workingBottom = new wall(workingCell, null);
                     walls.add(workingBottom);
+                    workingCell.setBottomWall(workingBottom);
                     workingCell.setBottomNeighbor(null);
                 } else {
                     wall workingBottom = new wall(workingCell, cells.get(listIndex + xSize));
@@ -116,6 +119,7 @@ public class gridGraph {
                 if (cellX ==1) {
                     wall workingLeft = new wall(workingCell, null);
                     walls.add(workingLeft);
+                    workingCell.setLeftWall(workingLeft);
                     workingCell.setLeftNeighbor(null);
                 } else {
                     wall workingLeft = new wall(workingCell, cells.get(listIndex - 1));
@@ -314,16 +318,10 @@ public class gridGraph {
         public boolean equals(Object obj) {
             if (!(obj instanceof wall)) {
                 return false;
-            } else if (this.getCellOne() == null || this.getCellTwo() == null) {
-                return false;
-            } else if ((this.getCellOne().equals(((wall)obj).getCellOne()) || this.getCellOne().equals(((wall)obj).getCellTwo())) &&
-                    (this.getCellTwo().equals(((wall)obj).getCellOne()) || this.getCellTwo().equals(((wall)obj).getCellTwo()))) {
-                return true;
             } else {
-                return false;
+                return ((this.getCellOne().equals(((wall)obj).getCellOne()) || this.getCellOne().equals(((wall)obj).getCellTwo())) &&
+                        (this.getCellTwo().equals(((wall)obj).getCellOne()) || this.getCellTwo().equals(((wall)obj).getCellTwo())));
             }
         }
-
-
     }
 }

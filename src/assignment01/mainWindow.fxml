@@ -55,8 +55,8 @@
                               <ToggleGroup fx:id="pixelSizeGroup" />
                            </toggleGroup>
                         </RadioMenuItem>
-                        <RadioMenuItem fx:id="pixelSize10" mnemonicParsing="false" onAction="#setPixelSize10" selected="true" text="10" toggleGroup="$pixelSizeGroup" />
-                        <RadioMenuItem fx:id="pixelSize20" mnemonicParsing="false" onAction="#setPixelSize20" text="20" toggleGroup="$pixelSizeGroup" />
+                        <RadioMenuItem fx:id="pixelSize10" mnemonicParsing="false" onAction="#setPixelSize10" text="10" toggleGroup="$pixelSizeGroup" />
+                        <RadioMenuItem fx:id="pixelSize20" mnemonicParsing="false" onAction="#setPixelSize20" selected="true" text="20" toggleGroup="$pixelSizeGroup" />
                     </items>
                   </Menu>
               </items>

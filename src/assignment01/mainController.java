@@ -11,6 +11,8 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 public class mainController implements Initializable {
@@ -30,6 +32,8 @@ public class mainController implements Initializable {
 
     // private attributes
     private int pixelSize;
+    private gridGraph graph;
+    private ArrayList<gridGraph.cell> mazePath = new ArrayList<>();
 
 
     @Override
@@ -38,30 +42,130 @@ public class mainController implements Initializable {
         canvasGc = centerCanvas.getGraphicsContext2D();
 
         // draw the grid upon startup
-        setPixelSize10();
-        System.out.println(canvasGc.getCanvas().getHeight());
-        System.out.println(canvasGc.getCanvas().getWidth());
+        setPixelSize20();
+        //System.out.println(canvasGc.getCanvas().getHeight());
+        //System.out.println(canvasGc.getCanvas().getWidth());
+        drawOutline(canvasGc);
     }
 
     // Public Event Handling Methods
     public void generateMaze() {
         // method used to generate the maze object and display it on the mainCanvas object
 
+        // method variables
+        int canvasWidth = (int)canvasGc.getCanvas().getWidth();
+        int canvasHeight = (int)canvasGc.getCanvas().getHeight();
+        int gridWidth = canvasWidth/this.pixelSize;
+        int gridHeight = canvasHeight/this.pixelSize;
+        ArrayList<gridGraph.wall> wallList = new ArrayList<>();
+
+        // Start with a grid full of walls.
+        graph = new gridGraph(gridWidth, gridHeight);
+
+        // pick a random cell and add it to the maze and add walls to wall list
+        // for this, we want the start to be on the left hand row, so will need to pick a cell w/ xPos == 1
+        Random random = new Random();
+        int startCellXpos = random.nextInt(gridHeight);
+        gridGraph.cell startCell = graph.getCell((startCellXpos * gridWidth));
+        startCell.visit();
+        mazePath.add(startCell);
+        addWalls(startCell, wallList);
+
+        // while there are walls left in the list
+        while (!(wallList.isEmpty())) {
+
+            // pick a random wall from the list
+            Random rand = new Random();
+            int choice = rand.nextInt(wallList.size());
+            //System.out.println("Random number used: " + choice);
+            //System.out.println("Total Cells in Maze: " + mazePath.size());
+            //System.out.println("Size of wallList: " + wallList.size());
+            gridGraph.wall workingWall = wallList.get(choice);
+
+            gridGraph.cell cellOne = workingWall.getCellOne();
+            gridGraph.cell cellTwo = workingWall.getCellTwo();
+
+            if (!(mazePath.contains(cellTwo))) {
+                mazePath.add(cellTwo);
+                workingWall.setPassage(true);
+                addWalls(cellTwo, wallList);
+                wallList.remove(workingWall);
+                // add the new cell's walls to the wall list
+            } else if (!(mazePath.contains(cellOne))) {
+                mazePath.add(cellOne);
+                workingWall.setPassage(true);
+                addWalls(cellOne, wallList);
+                wallList.remove(workingWall);
+            } else {
+                wallList.remove(workingWall);
+                // as both cells are already in the path, remove wall from list
+                // restart the loop
+            }
+        }
+        updateNotificationArea("Maze Successfully Generated");
+        //System.out.println("Total Cells in Maze: " + mazePath.size());
+        //System.out.println("Size of wallList: " + wallList.size());
+
+
+        drawMaze(canvasGc, mazePath);
+        drawOutline(canvasGc);
+
+    }
+
+    private void addWalls(gridGraph.cell inputCell, ArrayList<gridGraph.wall> inputList) {
+        // this method takes a cell and a list and adds all walls that are not already on the list
+        if (!(inputCell.getTopWall().getCellTwo() == null)) {
+            gridGraph.wall workingWall = inputCell.getTopWall();
+            if (!(inputList.contains(workingWall))) {
+                inputList.add(workingWall);
+            } else {
+                // do nothing
+            }
+        }
+        if (!(inputCell.getRightWall().getCellTwo() == null)) {
+            gridGraph.wall workingWall = inputCell.getRightWall();
+            if (!(inputList.contains(workingWall))) {
+                inputList.add(workingWall);
+            } else {
+                // do nothing
+            }
+        }
+
+        if (!(inputCell.getBottomWall().getCellTwo() == null)) {
+            gridGraph.wall workingWall = inputCell.getBottomWall();
+            if (!(inputList.contains(workingWall))) {
+                inputList.add(workingWall);
+            } else {
+                // do nothing
+            }
+        }
+        if (!(inputCell.getLeftWall().getCellTwo() == null)) {
+            gridGraph.wall workingWall = inputCell.getLeftWall();
+            if (!(inputList.contains(workingWall))) {
+                inputList.add(workingWall);
+            } else {
+                // do nothing
+            }
+        }
     }
 
     public void clearMaze() {
         // method used to reset the application to its initial state
         canvasGc.clearRect(0,0,centerCanvas.getWidth(),centerCanvas.getHeight());
+        mazePath.clear();
+        drawOutline(canvasGc);
+        updateNotificationArea("Maze Cleared");
         //drawGrid(canvasGc);
     }
 
     public void solveMaze() {
         // this method invokes the AI agent that will solve the maze
-        gridGraph graph = new gridGraph((int)canvasGc.getCanvas().getWidth()/this.pixelSize,
-                (int)canvasGc.getCanvas().getHeight()/this.pixelSize);
+
         updateNotificationArea("The gridGraph object has been successfully created.");
         System.out.println("Number of Cells: " + graph.getCellsSize());
         System.out.println("Number of Walls: " + graph.getWallsSize());
+        System.out.println(randomChoice());
+        System.out.println(randomChoice());
     }
 
     public void showAbout() throws Exception {
@@ -106,59 +210,106 @@ public class mainController implements Initializable {
         notificationText.setText(notification);
     }
 
-    private void drawGrid(GraphicsContext contextInput) {
-        // draws a grid with cell size of 10x10 pixels, size of pixel can be changed with the parameters given below
-
-        // Define the "pixel" size (in actual pixels)
-        int pixelHeight = this.pixelSize;
-        int pixelWidth = this.pixelSize;
-
-        // Determine the maximum sizes for the canvas area
-        double verticalSize = contextInput.getCanvas().getHeight();
-        double horizontalSize = contextInput.getCanvas().getWidth();
-
-        // Set formatting parameters
-        contextInput.setLineWidth(0.5);
-
-        // Draw the horizontal lines
-        for (int vIndex = 0; vIndex <= verticalSize; vIndex++) {
-            if (vIndex%pixelWidth == 0) {
-                contextInput.strokeLine(0,vIndex,horizontalSize,vIndex);
-            }
-        }
-
-        // Draw the vertical lines
-        for (int hIndex = 0; hIndex <= horizontalSize; hIndex++) {
-            if (hIndex%pixelHeight == 0) {
-                contextInput.strokeLine(hIndex,0,hIndex,verticalSize);
-            }
-        }
-        
+    private int randomChoice() {
+        // returns an integer from 0 to 4 at random
+        Random output = new Random();
+        return output.nextInt(4);
     }
 
-    private void drawCell(GraphicsContext context, gridGraph.cell inputCell, Color colorInput) {
+    private void drawMaze(GraphicsContext contextInput, ArrayList<gridGraph.cell> inputMaze) {
+        // draws a grid with cell size in pixels, size of pixel can be changed with the parameters given below
+
+        ArrayList<gridGraph.wall> drawnWalls = new ArrayList<>();
+
+        // iterate over each cell in mazePath array
+        for (int cellIndex = 0; cellIndex < inputMaze.size(); cellIndex++) {
+
+            // get the particular cell from the mazePath array
+            gridGraph.cell workingCell = inputMaze.get(cellIndex);
+
+            // iterate over each wall in the cell
+            // top wall
+            if (workingCell.getTopWall().getCellTwo() != null && !(workingCell.getTopWall().isPassage())) {
+                if (!(drawnWalls.contains(workingCell.getTopWall()))) {
+                    // draw the top wall line
+                    drawGridLine(canvasGc, workingCell, "top");
+                    // add wall to drawn wall list
+                    drawnWalls.add(workingCell.getTopWall());
+                }
+            }
+            // right wall
+            if (workingCell.getRightWall().getCellTwo() != null && !(workingCell.getRightWall().isPassage())) {
+                if (!(drawnWalls.contains(workingCell.getRightWall()))) {
+                    drawGridLine(canvasGc, workingCell, "right");
+                    drawnWalls.add(workingCell.getRightWall());
+                }
+            }
+            // bottom wall
+            if (workingCell.getBottomWall().getCellTwo() != null && !(workingCell.getBottomWall().isPassage())) {
+                if (!(drawnWalls.contains(workingCell.getBottomWall()))) {
+                    drawGridLine(canvasGc, workingCell, "bottom");
+                    drawnWalls.add(workingCell.getBottomWall());
+                }
+            }
+            // left wall
+            if (workingCell.getLeftWall().getCellTwo() != null && !(workingCell.getLeftWall().isPassage())) {
+                if (!(drawnWalls.contains(workingCell.getLeftWall()))) {
+                    drawGridLine(canvasGc, workingCell, "left");
+                    drawnWalls.add(workingCell.getLeftWall());
+                }
+            }
+        }
+    }
+
+    private void drawGridLine(GraphicsContext inputContext, gridGraph.cell inputCell, String direction) {
+
+        double canvasWidth = inputContext.getCanvas().getWidth();
+        double canvasHeight = inputContext.getCanvas().getHeight();
+        int pixelSize = this.pixelSize;
+        int gridXpos = inputCell.getX()-1;
+        int gridYpos = inputCell.getY()-1;
+        inputContext.setLineWidth(1.0);
+        inputContext.setStroke(Color.BLACK);
+
+        int topLeftXpos = gridXpos * pixelSize;
+        int topLeftYpos = gridYpos * pixelSize;
+
+        int topRightXpos = topLeftXpos + pixelSize;
+        int topRightYpos = topLeftYpos;
+
+        int bottomLeftXpos = topLeftXpos;
+        int bottomLeftYpos = topLeftYpos + pixelSize;
+
+        int bottomRightXpos = topRightXpos;
+        int bottomRightYpos = bottomLeftYpos;
+
+        if (direction.equalsIgnoreCase("top")) {
+            inputContext.strokeLine(topLeftXpos, topLeftYpos, topRightXpos, topRightYpos);
+        }
+        if (direction.equalsIgnoreCase("right")) {
+            inputContext.strokeLine(topRightXpos, topRightYpos, bottomRightXpos, bottomRightYpos);
+        }
+        if (direction.equalsIgnoreCase("bottom")) {
+            inputContext.strokeLine(bottomRightXpos, bottomRightYpos, bottomLeftXpos, bottomLeftYpos);
+        }
+        if (direction.equalsIgnoreCase("left")) {
+            inputContext.strokeLine(bottomLeftXpos, bottomLeftYpos, topLeftXpos, topLeftYpos);
+        }
+
+    }
+
+    private void drawOutline(GraphicsContext context) {
         // this method takes a cell as input and draws it on the canvas at the appropriate coordinates
 
-        // Set the fill color
-        context.setFill(colorInput);
+        // Set the stroke color
+        context.setLineWidth(3.0);
+        context.setStroke(Color.BLACK);
 
-        // define the size of the pixel
-        int pixelHeight = this.pixelSize;
-        int pixelWidth = this.pixelSize;
-
-        // get coordinates from cell
-        int xPos = inputCell.getX();
-        int yPos = inputCell.getY();
-
-        // transform cell coordinates to canvas coordinates
-        int canvasXpos = (xPos - 1) * pixelWidth;
-        int canvasYpos = (yPos - 1) * pixelHeight;
-
-        // draw actual pixel to the canvas
-        context.fillRect(canvasXpos, canvasYpos,pixelWidth, pixelHeight);
+        context.strokeLine(0, 0, context.getCanvas().getWidth(), 0);
+        context.strokeLine(0,0,0, context.getCanvas().getHeight());
+        context.strokeLine(context.getCanvas().getWidth(), 0, context.getCanvas().getWidth(), context.getCanvas().getHeight());
+        context.strokeLine(0, context.getCanvas().getHeight(), context.getCanvas().getWidth(), context.getCanvas().getHeight());
     }
-
-    int wallCount = 0;
 
     private void drawWall(GraphicsContext context, gridGraph.wall inputWall, Color colorInput) {
         // this method takes a wall as input and draws it at the appropriate location on the canvas
@@ -198,7 +349,6 @@ public class mainController implements Initializable {
             int rightYpos = (yPos1 -1) * pixelHeight;
             int rightYpos2 = rightYpos + pixelHeight;
             context.strokeLine(rightXpos, rightYpos, rightXpos, rightYpos2);
-            wallCount++;
 
             // for bottom walls
             if (yPos1 != context.getCanvas().getHeight()/pixelHeight) {
@@ -206,7 +356,6 @@ public class mainController implements Initializable {
                 int bottomYpos = (yPos1 - 1) * pixelHeight + pixelHeight;
                 int bottomXpos2 = bottomXpos + pixelWidth;
                 context.strokeLine(bottomXpos, bottomYpos, bottomXpos2, bottomYpos);
-                wallCount++;
             }
         }
 
@@ -216,7 +365,6 @@ public class mainController implements Initializable {
             int bottomYpos = (yPos1 - 1) * pixelHeight + pixelHeight;
             int bottomXpos2 = bottomXpos + pixelWidth;
             context.strokeLine(bottomXpos, bottomYpos, bottomXpos2, bottomYpos);
-            wallCount++;
         }
 
         context.setStroke(Color.RED);
