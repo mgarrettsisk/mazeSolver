@@ -1,0 +1,34 @@
+Notes for AI Agent to work.
+
+
+Environment: Generated Maze -> All cells contain walls and exist as part of the maze.
+Goal: Make it to the Goal Cell through the maze
+
+
+PEAS:
+
+Performance: Can it reach the goal directly as possible
+Environment: Generated Maze
+Actuators: Moving to next cell
+Sensors: determining which wall is a passage
+
+
+Randomly select a start and end cell
+
+While the current cell is not the goal cell:
+
+0) Start at the start cell
+
+1) Determine which walls are passages
+    1.1) For each wall on current cell, check to see if they are passages
+        1.1.1) For each cell that is unvisited, compute the distance to the goal for each
+        1.1.2) Move to the neighboring cell and add cell to path list
+        1.1.3)
+    1.2) If all neighboring cells on the path are blocked by walls, go to previous cell and repeat if able
+        1.2.1) repeat this as many times as necessary
+
+2) From available choices, determine which cell is closest to the goal cell
+    2.1) Compute straight line distances between possible cells and goal cell
+    2.2) Move to cell with lowest value
+
+3) Move to next cell, and repeat from (1)
