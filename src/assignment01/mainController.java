@@ -12,6 +12,7 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -34,6 +35,7 @@ public class mainController implements Initializable {
     private int pixelSize;
     private gridGraph graph;
     private ArrayList<gridGraph.cell> mazePath = new ArrayList<>();
+    private LinkedList<gridGraph.cell> solutionPath = new LinkedList<>();
 
 
     @Override
@@ -110,7 +112,16 @@ public class mainController implements Initializable {
 
     public void solveMaze() {
         // this method invokes the AI agent that will solve the maze
-        updateNotificationArea("This method has not yet been implemented");
+        aiAgent solver = new aiAgent(this.mazePath, mazePath.get(0), mazePath.get((mazePath.size()-1)));
+        solver.solveMaze();
+        this.solutionPath = solver.getSolutionPath();
+        updateNotificationArea("The maze has been solved");
+        for (int drawIndex = 0; drawIndex < this.solutionPath.size(); drawIndex++) {
+            gridGraph.cell drawnCell = solutionPath.get(drawIndex);
+            int xPos = drawnCell.getX();
+            int yPos = drawnCell.getY();
+            drawPixel(canvasGc, xPos, yPos, "green");
+        }
     }
 
     public void showAbout() throws Exception {
@@ -240,6 +251,9 @@ public class mainController implements Initializable {
                 }
             }
         }
+        int cellIndex = 52;
+        int visitCount = inputMaze.get(cellIndex).getVisitCount();
+        updateNotificationArea("Cell number " + cellIndex + " has a visit count equal to: " + visitCount);
     }
 
     private void drawGridLine(GraphicsContext inputContext, gridGraph.cell inputCell, String direction) {

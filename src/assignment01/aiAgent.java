@@ -8,7 +8,7 @@ public class aiAgent {
     // attributes
 
     private gridGraph.cell goalCell;
-
+    private ArrayList<gridGraph.cell> mazePath = new ArrayList<>();
     private LinkedList<gridGraph.cell> solutionPathStack = new LinkedList<>();
     private ArrayList<gridGraph.cell> possibleMoves = new ArrayList<>();
 
@@ -18,20 +18,45 @@ public class aiAgent {
         // null constructor
     }
 
-    aiAgent(gridGraph inputGraph, gridGraph.cell startCell, gridGraph.cell goalCell) {
+    aiAgent(ArrayList<gridGraph.cell> inputMaze, gridGraph.cell startCell, gridGraph.cell goalCell) {
         // this constructor takes a list of cells on the maze path, along with a start cell and goal cell
 
         // first, push the start cell onto the solutionPathStack list
-        solutionPathStack.push(startCell);
+        this.solutionPathStack.push(startCell);
 
         // second, set the goal cell attribute
-        setGoalCell(goalCell);
+        this.setGoalCell(goalCell);
 
-        // third, extract the mazePath list from the graph object
-            // THIS MAY REQUIRE SOME ADDITIONAL THOUGHT. SEE MAINCONTROLLER.JAVA TO SEE HOW THE MAZE PATH IS GIVEN
+        // third, set the mazePath array list such that we have something to work on
+        this.mazePath = inputMaze;
     }
 
     // public methods
+
+    public void solveMaze() {
+        // this method actually does the solving, and creates the solution path along the stack
+
+        // define starting cell
+        gridGraph.cell currentCell = this.solutionPathStack.peek();
+
+        while (!(currentCell.equals(goalCell))) {
+            // determine which cells can be moved to
+            currentCell.visit();
+            determinePossibleMoves(currentCell);
+            if (possibleMoves.isEmpty()) {
+                // if no possible moves at this cell, pop off current cell from stack and repeat for previous cell
+                solutionPathStack.pop();
+                currentCell = solutionPathStack.peek();
+                System.out.println("Stack size reduced by one. New Size: " + solutionPathStack.size());
+            } else {
+                // else choose the best possible move, and add the new cell to the stack and redo loop
+                currentCell = computeBestMove(possibleMoves, goalCell);
+                solutionPathStack.push(currentCell);
+                System.out.println("X: " + currentCell.getX() + "; Y: " + currentCell.getY());
+                System.out.println("Stack size increased by one. New Size: " + solutionPathStack.size());
+            }
+        }
+    }
 
     public void setGoalCell(gridGraph.cell inputCell) {
         // method sets the attribute for the goal cell
@@ -77,16 +102,28 @@ public class aiAgent {
 
         // examine each wall and add the neighboring cell to the possible moves list if the wall is a passage
         if (inputCell.getTopWall().isPassage()) {
-            this.possibleMoves.add(inputCell.getNeighbors()[0]);
+            gridGraph.cell topNeighbor = inputCell.getNeighbors()[0];
+            if (topNeighbor.getVisitCount() == 0) {
+                this.possibleMoves.add(topNeighbor);
+            }
         }
         if (inputCell.getRightWall().isPassage()) {
-            this.possibleMoves.add(inputCell.getNeighbors()[1]);
+            gridGraph.cell rightNeighbor = inputCell.getNeighbors()[1];
+            if (rightNeighbor.getVisitCount() == 0) {
+                this.possibleMoves.add(rightNeighbor);
+            }
         }
         if (inputCell.getBottomWall().isPassage()) {
-            this.possibleMoves.add(inputCell.getNeighbors()[2]);
+            gridGraph.cell bottomNeighbor = inputCell.getNeighbors()[2];
+            if (bottomNeighbor.getVisitCount() == 0) {
+                this.possibleMoves.add(bottomNeighbor);
+            }
         }
         if (inputCell.getLeftWall().isPassage()) {
-            this.possibleMoves.add(inputCell.getNeighbors()[3]);
+            gridGraph.cell leftNeighbor = inputCell.getNeighbors()[3];
+            if (leftNeighbor.getVisitCount() == 0) {
+                this.possibleMoves.add(leftNeighbor);
+            }
         }
     }
 
@@ -112,7 +149,7 @@ public class aiAgent {
                 // this is the first cell, and we set the shortest distance as the distance
                 shortestDistance = distance;
                 outputIndex = listIndex;
-            } else if (distance < shortestDistance) {
+            } else if (distance <= shortestDistance) {
                 // the newly computed distance is shorter, so set the shortest distance and the output index
                 shortestDistance = distance;
                 outputIndex = listIndex;
