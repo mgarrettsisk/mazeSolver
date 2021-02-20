@@ -7,11 +7,9 @@ import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
 public class aboutController {
-
     // Initialize GUI Elements
     public Button closeAboutButton;
     public Stage activeStage = new Stage();
-
     // Public Methods
     public void showWindow() throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("aboutWindow.fxml"));

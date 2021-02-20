@@ -32,9 +32,9 @@
             <Menu mnemonicParsing="false" text="Actions">
               <items>
                 <MenuItem fx:id="generateMazeMenuButton" mnemonicParsing="false" onAction="#generateMaze" text="Generate Maze" />
-                  <MenuItem fx:id="clearMazeMenuButton" mnemonicParsing="false" onAction="#clearMaze" text="Clear Maze" />
                   <MenuItem fx:id="setStartFinishMenuButton" mnemonicParsing="false" onAction="#setStartFinishCells" text="Set Start and Finish" />
                   <MenuItem fx:id="solveMazeMenuButton" mnemonicParsing="false" onAction="#solveMaze" text="Solve Maze" />
+                  <MenuItem fx:id="clearMazeMenuButton" mnemonicParsing="false" onAction="#clearMaze" text="Clear Maze" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <Menu mnemonicParsing="false" text="Set Pixel Size">
                     <items>
@@ -76,8 +76,19 @@
             </HBox>
             <HBox>
                <children>
-                  <TextField fx:id="notificationText" alignment="CENTER_RIGHT" editable="false" text="Must first click &quot;Generate Maze&quot;" HBox.hgrow="ALWAYS" />
+                  <TextField fx:id="dataTextField" editable="false" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </HBox.margin>
+                  </TextField>
+                  <TextField fx:id="notificationText" alignment="CENTER_RIGHT" editable="false" text="Must first click &quot;Generate Maze&quot;" HBox.hgrow="ALWAYS">
+                     <HBox.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </HBox.margin></TextField>
                </children>
+               <VBox.margin>
+                  <Insets bottom="5.0" />
+               </VBox.margin>
             </HBox>
          </children>
       </VBox>

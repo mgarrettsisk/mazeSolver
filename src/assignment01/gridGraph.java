@@ -13,32 +13,24 @@ public class gridGraph {
         // constructor method that creates the data structure
         generateGraphStructure(x, y);
     }
-
     // Public Methods
-
     public cell getCell(int index) {
         // returns a cell object given a particular index on the cells ArrayList.
         return cells.get(index);
     }
-
     public int getCellsSize() {
         // returns the cardinality of the cells set
         return cells.size();
     }
-
     public wall getWall(int index) {
         // returns a wall object given a particular index on the walls ArrayList
         return walls.get(index);
     }
-
     public int getWallsSize() {
         // returns the cardinality of the walls set
         return walls.size();
     }
-
-
     // Private Methods
-
     private void generateGraphStructure(int xSize, int ySize) {
         /* this method takes a 2D size parameter (as two separate integer values) and populates the data structure with
             the following arrangement:
@@ -133,11 +125,8 @@ public class gridGraph {
                 }
             }
         }
-
     // Internal Classes
-
     public class cell {
-
         // Attributes
         private int[] position;
         private int visitCount = 0;
@@ -146,117 +135,81 @@ public class gridGraph {
         private wall rightWall = null;
         private wall bottomWall = null;
         private final cell[] neighbors = new cell[4];
-
         // Methods
-
         cell(int[] coordinates) {
             // sets the coordinates based on the input array. Once set, this cannot be changed from outside the object
             // scope.
             this.setPosition(coordinates);
         }
-
         private void setPosition(int[] orderedPair) {
             // this method is used solely in the constructor method as the position of individual cells should not
             // change after creation
             this.position = orderedPair;
         }
-
-        protected int[] getPosition() {
-            // returns the array containing the coordinates of the cell
-            return this.position;
-        }
-
         protected int getX() {
             // returns only the X coordinate of the cell
             return this.position[0];
         }
-
         protected int getY() {
             // returns only the Y coordinate of the cell
             return this.position[1];
         }
-
         protected void setTopWall(wall inputWall) {
             // method to place the top wall into its appropriate place
             this.topWall = inputWall;
         }
-
         protected wall getTopWall() {
             // returns the top wall object
             return this.topWall;
         }
-
         protected void setLeftWall(wall inputWall) {
             // method to place the left wall into its appropriate place
             this.leftWall = inputWall;
         }
-
         protected wall getLeftWall() {
             // returns the left wall object
             return this.leftWall;
         }
-
         protected void setRightWall(wall inputWall) {
             // method to place the right wall into its appropriate place
             this.rightWall = inputWall;
         }
-
         protected wall getRightWall() {
             // returns the right wall------- object
             return this.rightWall;
         }
-
         protected void setBottomWall(wall inputWall) {
             // method to place the bottom wall into its appropriate place
             this.bottomWall = inputWall;
         }
-
         protected wall getBottomWall() {
             // returns the bottom wall object
             return this.bottomWall;
         }
-
         protected void visit() {
             // increases the visit count by 1 every time the method is called
             this.visitCount++;
         }
-
         protected int getVisitCount() {
             // returns the visit count when called
             return this.visitCount;
         }
-
-        protected boolean isNeighbor(cell c) {
-            // this method takes a cell as input and determines whether it is a neighboring cell or not
-            // This is achieved by comparing the wall objects between the cells. Essentially, if the wall object is the
-            // same on the cell "c" as it is on the mating side of the current cell, then the cells are neighbors. If
-            // any walls contain "null" then there is no neighbor on that side, and the method will not check that side.
-            //
-            // The method returns a boolean "true" if the cells are neighbors, and a "false" if they are not.
-
-            return true;
-        }
-
         protected void setTopNeighbor(cell c) {
             // this method takes a cell as input and adds as the top neighbor
             this.neighbors[0] = c;
         }
-
         protected void setRightNeighbor(cell c) {
             // this method takes a cell as input and adds as the right neighbor
             this.neighbors[1] = c;
         }
-
         protected void setBottomNeighbor(cell c) {
             // this method takes a cell as input and adds as the bottom neighbor
             this.neighbors[2] = c;
         }
-
         protected void setLeftNeighbor(cell c) {
             // this method takes a cell as input and adds as the left neighbor
             this.neighbors[3] = c;
         }
-
         protected cell[] getNeighbors() {
             // returns the array list of neighboring cells
             // The array is of format:
@@ -266,7 +219,6 @@ public class gridGraph {
             //  3 = left
             return this.neighbors;
         }
-
         @Override
         public boolean equals(Object obj) {
             if (!(obj instanceof cell)) {
@@ -277,14 +229,11 @@ public class gridGraph {
             }
         }
     }
-
     public class wall {
-
         // Attributes
         private final cell cellOne;
         private final cell cellTwo;
         private boolean passage = false;
-
         // Methods
         wall(cell cellOne, cell cellTwo) {
             // constructor method assigns each cell to an end of an edge. These two cells exist on each side of the
@@ -292,28 +241,23 @@ public class gridGraph {
             this.cellOne = cellOne;
             this.cellTwo = cellTwo;
         }
-
         public cell getCellOne() {
             // returns the first cell in the edge (or wall, such as it is)
             return this.cellOne;
         }
-
         public cell getCellTwo() {
             // returns the second cell in the edge (or wall)
             return this.cellTwo;
         }
-
         public void setPassage(boolean tf) {
             // sets the passage parameter in the wall, if the wall is meant to be "knocked down" use this to specify
             this.passage = tf;
         }
-
         public boolean isPassage() {
             // returns the value that determines whether this edge is a passage or not. The default is 'false' which
             // indicates this wall is non-passable.
             return this.passage;
         }
-
         @Override
         public boolean equals(Object obj) {
             if (!(obj instanceof wall)) {
