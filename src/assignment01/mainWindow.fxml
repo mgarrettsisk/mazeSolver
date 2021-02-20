@@ -15,19 +15,6 @@
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/15.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="assignment01.mainController">
-   <bottom>
-      <HBox spacing="5.0" BorderPane.alignment="CENTER">
-         <children>
-            <Button fx:id="generateMazeButton" mnemonicParsing="false" onAction="#generateMaze" text="Generate Maze" />
-            <Button fx:id="clearMazeButton" mnemonicParsing="false" onAction="#clearMaze" text="Clear Maze" />
-            <Button fx:id="solveMazeButton" mnemonicParsing="false" onAction="#solveMaze" text="Solve Maze" />
-            <TextField fx:id="notificationText" alignment="CENTER_RIGHT" editable="false" prefHeight="27.0" prefWidth="313.0" text="Must first click &quot;Generate Maze&quot;" />
-         </children>
-         <padding>
-            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-         </padding>
-      </HBox>
-   </bottom>
    <right>
       <VBox BorderPane.alignment="CENTER" />
    </right>
@@ -46,6 +33,7 @@
               <items>
                 <MenuItem fx:id="generateMazeMenuButton" mnemonicParsing="false" onAction="#generateMaze" text="Generate Maze" />
                   <MenuItem fx:id="clearMazeMenuButton" mnemonicParsing="false" onAction="#clearMaze" text="Clear Maze" />
+                  <MenuItem fx:id="setStartFinishMenuButton" mnemonicParsing="false" onAction="#setStartFinishCells" text="Set Start and Finish" />
                   <MenuItem fx:id="solveMazeMenuButton" mnemonicParsing="false" onAction="#solveMaze" text="Solve Maze" />
                   <SeparatorMenuItem mnemonicParsing="false" />
                   <Menu mnemonicParsing="false" text="Set Pixel Size">
@@ -72,4 +60,26 @@
    <center>
       <Canvas fx:id="centerCanvas" height="500.0" width="500.0" BorderPane.alignment="CENTER" />
    </center>
+   <bottom>
+      <VBox BorderPane.alignment="CENTER">
+         <children>
+            <HBox alignment="TOP_CENTER" spacing="5.0">
+               <children>
+                  <Button fx:id="generateMazeButton" mnemonicParsing="false" onAction="#generateMaze" text="Generate Maze" />
+                  <Button fx:id="setStartFinishButton" mnemonicParsing="false" onAction="#setStartFinishCells" text="Set Start and Finish" />
+                  <Button fx:id="solveMazeButton" mnemonicParsing="false" onAction="#solveMaze" text="Solve Maze" />
+                  <Button fx:id="clearMazeButton" mnemonicParsing="false" onAction="#clearMaze" text="Clear Maze" />
+               </children>
+               <padding>
+                  <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+               </padding>
+            </HBox>
+            <HBox>
+               <children>
+                  <TextField fx:id="notificationText" alignment="CENTER_RIGHT" editable="false" text="Must first click &quot;Generate Maze&quot;" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </bottom>
 </BorderPane>

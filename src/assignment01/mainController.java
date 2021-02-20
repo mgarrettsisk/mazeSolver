@@ -25,9 +25,11 @@ public class mainController implements Initializable {
     public Button generateMazeButton;
     public Button clearMazeButton;
     public Button solveMazeButton;
+    public Button setStartFinishButton;
     public MenuItem generateMazeMenuButton;
     public MenuItem clearMazeMenuButton;
     public MenuItem solveMazeMenuButton;
+    public MenuItem setStartFinishMenuButton;
     public MenuItem aboutMenuButton;
     public GraphicsContext canvasGc;
 
@@ -36,6 +38,8 @@ public class mainController implements Initializable {
     private gridGraph graph;
     private ArrayList<gridGraph.cell> mazePath = new ArrayList<>();
     private LinkedList<gridGraph.cell> solutionPath = new LinkedList<>();
+    private gridGraph.cell startCell;
+    private gridGraph.cell goalCell;
 
 
     @Override
@@ -45,6 +49,14 @@ public class mainController implements Initializable {
         // draw the grid upon startup with default pixel size equal to 20 pixels
         setPixelSize20();
         drawOutline(canvasGc);
+
+        // set initial UI configuration
+        clearMazeButton.setDisable(true);
+        clearMazeMenuButton.setDisable(true);
+        solveMazeButton.setDisable(true);
+        solveMazeMenuButton.setDisable(true);
+        setStartFinishButton.setDisable(true);
+        setStartFinishMenuButton.setDisable(true);
     }
 
     // Public Event Handling Methods
@@ -97,9 +109,17 @@ public class mainController implements Initializable {
             }
         }
         // draw the actual maze in the GUI and give notification maze has been generated
-        updateNotificationArea("Maze Successfully Generated");
+        updateNotificationArea("Maze successfully generated with a grid unit size of " + this.pixelSize + " pixels.");
         drawMaze(canvasGc, mazePath);
         drawOutline(canvasGc);
+
+        // change UI configuration
+        setStartFinishButton.setDisable(false);
+        setStartFinishMenuButton.setDisable(false);
+        clearMazeButton.setDisable(false);
+        clearMazeMenuButton.setDisable(false);
+        generateMazeButton.setDisable(true);
+        generateMazeMenuButton.setDisable(true);
     }
 
     public void clearMaze() {
@@ -107,12 +127,23 @@ public class mainController implements Initializable {
         canvasGc.clearRect(0,0,centerCanvas.getWidth(),centerCanvas.getHeight());
         mazePath.clear();
         drawOutline(canvasGc);
-        updateNotificationArea("Maze Cleared");
+        updateNotificationArea("Maze cleared");
+
+        // change UI configuration
+        setStartFinishButton.setDisable(true);
+        setStartFinishMenuButton.setDisable(true);
+        clearMazeButton.setDisable(true);
+        clearMazeMenuButton.setDisable(true);
+        solveMazeButton.setDisable(true);
+        solveMazeMenuButton.setDisable(true);
+        generateMazeMenuButton.setDisable(false);
+        generateMazeButton.setDisable(false);
+        generateMazeButton.requestFocus();
     }
 
     public void solveMaze() {
         // this method invokes the AI agent that will solve the maze
-        aiAgent solver = new aiAgent(this.mazePath, mazePath.get(0), mazePath.get((mazePath.size()-1)));
+        aiAgent solver = new aiAgent(this.mazePath, this.startCell, this.goalCell);
         solver.solveMaze();
         this.solutionPath = solver.getSolutionPath();
         updateNotificationArea("The maze has been solved");
@@ -122,7 +153,30 @@ public class mainController implements Initializable {
             int yPos = drawnCell.getY();
             drawPixel(canvasGc, xPos, yPos, "green");
         }
+
+        // change UI configuration
+        solveMazeButton.setDisable(true);
+        solveMazeMenuButton.setDisable(true);
+        clearMazeButton.setDisable(false);
+        clearMazeMenuButton.setDisable(false);
+
     }
+
+    public void setStartFinishCells() {
+        // this method sets the start and goal cells from the gridGraph object that are then used to solve the maze.
+        Random startChoice = new Random();
+        Random endChoice = new Random();
+
+        this.startCell = mazePath.get(startChoice.nextInt(mazePath.size()));
+        this.goalCell = mazePath.get(endChoice.nextInt(mazePath.size()));
+
+        // change UI configuration
+        setStartFinishButton.setDisable(true);
+        setStartFinishMenuButton.setDisable(true);
+        solveMazeButton.setDisable(false);
+        solveMazeMenuButton.setDisable(false);
+    }
+
 
     public void showAbout() throws Exception {
         // this method calls the about window and displays the result
@@ -251,9 +305,6 @@ public class mainController implements Initializable {
                 }
             }
         }
-        int cellIndex = 52;
-        int visitCount = inputMaze.get(cellIndex).getVisitCount();
-        updateNotificationArea("Cell number " + cellIndex + " has a visit count equal to: " + visitCount);
     }
 
     private void drawGridLine(GraphicsContext inputContext, gridGraph.cell inputCell, String direction) {
