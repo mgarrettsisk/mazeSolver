@@ -102,7 +102,7 @@ public class mainController implements Initializable {
             }
         }
         // draw the actual maze in the GUI and give notification maze has been generated
-        updateNotificationArea("Maze successfully generated with a grid unit size of " + this.pixelSize + " pixels.");
+        updateNotificationArea("Maze successfully generated");
         dataString = "Size = " + this.pixelSize;
         updateDataTextArea(dataString);
         drawMaze(canvasGc, mazePath);
@@ -143,14 +143,26 @@ public class mainController implements Initializable {
             solver.solveMaze();
             this.solutionPath = solver.getSolutionPath();
             updateNotificationArea("The maze has been solved");
+            for (int visitIndex = 0; visitIndex < this.mazePath.size(); visitIndex++) {
+                gridGraph.cell workingCell = mazePath.get(visitIndex);
+                if (workingCell.getVisitCount() == 1) {
+                    drawPixel(canvasGc, workingCell.getX(), workingCell.getY(), Color.YELLOW);
+                } else if (workingCell.getVisitCount() == 2) {
+                    drawPixel(canvasGc, workingCell.getX(), workingCell.getY(), Color.ORANGE);
+                } else if (workingCell.getVisitCount() == 3) {
+                    drawPixel(canvasGc, workingCell.getX(), workingCell.getY(), Color.ORANGERED);
+                } else if (workingCell.getVisitCount() > 3) {
+                    drawPixel(canvasGc, workingCell.getX(), workingCell.getY(), Color.DARKRED);
+                }
+            }
             for (int drawIndex = 0; drawIndex < this.solutionPath.size(); drawIndex++) {
                 gridGraph.cell drawnCell = solutionPath.get(drawIndex);
                 int xPos = drawnCell.getX();
                 int yPos = drawnCell.getY();
-                drawPixel(canvasGc, xPos, yPos, "light blue");
+                drawPixel(canvasGc, xPos, yPos, Color.BLUE);
             }
-            drawPixel(canvasGc, startCell.getX(), startCell.getY(), "green");
-            drawPixel(canvasGc, goalCell.getX(), goalCell.getY(), "red");
+            drawPixel(canvasGc, startCell.getX(), startCell.getY(), Color.GREEN);
+            drawPixel(canvasGc, goalCell.getX(), goalCell.getY(), Color.RED);
             // redraw the grid above the path plots
             drawMaze(canvasGc, mazePath);
             drawOutline(canvasGc);
@@ -173,8 +185,8 @@ public class mainController implements Initializable {
         Random endChoice = new Random();
         this.startCell = mazePath.get(startChoice.nextInt(mazePath.size()));
         this.goalCell = mazePath.get(endChoice.nextInt(mazePath.size()));
-        drawPixel(canvasGc, startCell.getX(), startCell.getY(), "green");
-        drawPixel(canvasGc, goalCell.getX(), goalCell.getY(), "red");
+        drawPixel(canvasGc, startCell.getX(), startCell.getY(), Color.GREEN);
+        drawPixel(canvasGc, goalCell.getX(), goalCell.getY(), Color.RED);
         String formerString = dataString;
         dataString = "Start: (" + startCell.getX() + ", " + startCell.getY() +
                 "), End: (" + goalCell.getX() + ", " + goalCell.getY() + "), "
@@ -342,20 +354,10 @@ public class mainController implements Initializable {
         context.strokeLine(0, context.getCanvas().getHeight(), context.getCanvas().getWidth(),
                 context.getCanvas().getHeight());
     }
-    private void drawPixel(GraphicsContext contextInput, int x, int y, String color) {
+    private void drawPixel(GraphicsContext contextInput, int x, int y, Color colorInput) {
         // creates a pixel that is then drawn onto the particular canvas. Pixel size and color can be defined below.
         // Set the color of the pixel
-        if (color.equalsIgnoreCase("blue")){
-            contextInput.setFill(Color.BLUE);
-        } else if (color.equalsIgnoreCase("red")) {
-            contextInput.setFill(Color.RED);
-        } else if (color.equalsIgnoreCase("green")) {
-            contextInput.setFill(Color.GREEN);
-        } else if (color.equalsIgnoreCase("light blue")) {
-            contextInput.setFill(Color.LIGHTBLUE);
-        } else {
-            contextInput.setFill(Color.BLACK);
-        }
+        contextInput.setFill(colorInput);
         // Define the Size of the pixel
         int pixelHeight = this.pixelSize;
         int pixelWidth = this.pixelSize;
