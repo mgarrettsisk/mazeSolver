@@ -103,7 +103,7 @@ public class mainController implements Initializable {
         }
         // draw the actual maze in the GUI and give notification maze has been generated
         updateNotificationArea("Maze successfully generated with a grid unit size of " + this.pixelSize + " pixels.");
-        dataString = "Cell Size = " + this.pixelSize;
+        dataString = "Size = " + this.pixelSize;
         updateDataTextArea(dataString);
         drawMaze(canvasGc, mazePath);
         drawOutline(canvasGc);
@@ -134,28 +134,38 @@ public class mainController implements Initializable {
         generateMazeButton.setDisable(false);
         generateMazeButton.requestFocus();
     }
-    public void solveMaze() {
+    public void solveMaze() throws NullPointerException {
         // clear the canvas
-        canvasGc.clearRect(0,0,centerCanvas.getWidth(),centerCanvas.getHeight());
-        // this method invokes the AI agent that will solve the maze
-        aiAgent solver = new aiAgent(this.startCell, this.goalCell);
-        solver.solveMaze();
-        this.solutionPath = solver.getSolutionPath();
-        updateNotificationArea("The maze has been solved");
-        for (int drawIndex = 0; drawIndex < this.solutionPath.size(); drawIndex++) {
-            gridGraph.cell drawnCell = solutionPath.get(drawIndex);
-            int xPos = drawnCell.getX();
-            int yPos = drawnCell.getY();
-            drawPixel(canvasGc, xPos, yPos, "light blue");
+        try {
+            canvasGc.clearRect(0, 0, centerCanvas.getWidth(), centerCanvas.getHeight());
+            // this method invokes the AI agent that will solve the maze
+            aiAgent solver = new aiAgent(this.startCell, this.goalCell);
+            solver.solveMaze();
+            this.solutionPath = solver.getSolutionPath();
+            updateNotificationArea("The maze has been solved");
+            for (int drawIndex = 0; drawIndex < this.solutionPath.size(); drawIndex++) {
+                gridGraph.cell drawnCell = solutionPath.get(drawIndex);
+                int xPos = drawnCell.getX();
+                int yPos = drawnCell.getY();
+                drawPixel(canvasGc, xPos, yPos, "light blue");
+            }
+            drawPixel(canvasGc, startCell.getX(), startCell.getY(), "green");
+            drawPixel(canvasGc, goalCell.getX(), goalCell.getY(), "red");
+            // redraw the grid above the path plots
+            drawMaze(canvasGc, mazePath);
+            drawOutline(canvasGc);
+            // change UI configuration
+            solveMazeButton.setDisable(true);
+            solveMazeMenuButton.setDisable(true);
+            clearMazeButton.setDisable(false);
+            clearMazeMenuButton.setDisable(false);
+        } catch (NullPointerException ex) {
+            updateNotificationArea("An error occurred. Clear the maze and start over.");
+            clearMazeButton.setDisable(false);
+            clearMazeMenuButton.setDisable(false);
+            solveMazeButton.setDisable(true);
+            solveMazeMenuButton.setDisable(true);
         }
-        // redraw the grid above the path plots
-        drawMaze(canvasGc, mazePath);
-        drawOutline(canvasGc);
-        // change UI configuration
-        solveMazeButton.setDisable(true);
-        solveMazeMenuButton.setDisable(true);
-        clearMazeButton.setDisable(false);
-        clearMazeMenuButton.setDisable(false);
     }
     public void setStartFinishCells() {
         // this method sets the start and goal cells from the gridGraph object that are then used to solve the maze.
@@ -167,7 +177,7 @@ public class mainController implements Initializable {
         drawPixel(canvasGc, goalCell.getX(), goalCell.getY(), "red");
         String formerString = dataString;
         dataString = "Start: (" + startCell.getX() + ", " + startCell.getY() +
-                "), End Cell: (" + goalCell.getX() + ", " + goalCell.getY() + "), "
+                "), End: (" + goalCell.getX() + ", " + goalCell.getY() + "), "
                 + formerString;
         updateDataTextArea(dataString);
         // change UI configuration
